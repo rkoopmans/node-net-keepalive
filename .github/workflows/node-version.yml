@@ -44,3 +44,31 @@ jobs:
 
       - name: Test (integration)
         run: npm run test:integration
+
+
+  test-integration-alpine:
+    runs-on: ubuntu-latest
+
+    container:
+      image: alpine:3.18
+
+    steps:
+      - name: Install dependencies
+        run: |
+          apk add --no-cache nodejs npm
+
+      - name: Setup Node
+        uses: actions/setup-node@v2-beta
+        with:
+          node-version: ${{ github.event.inputs.node }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (full)
+        run: |
+          npm i --prefer-offline --no-audit
+          npm list --depth=0 || true
+
+      - name: Test (integration)
+        run: npm run test:integration
